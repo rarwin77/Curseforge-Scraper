@@ -83,6 +83,27 @@ def download_preferences_setter(download_directory):
     fp.set_preference("browser.download.useDownloadDir", True)
     driver = webdriver.Firefox(firefox_profile = fp)
 
+def file_detector(modname, downloaddirectory, version):
+    file_moved = 0
+    while True:
+        for file in os.listdir(downloaddirectory):
+            if file.endswith(".jar")or file.endswith(".zip"):
+                file_name = file
+                try:
+                    os.mkdir(downloaddirectory + f"\{modname}\{version}")
+                except:
+                    print(modname + version + " folder already exists")
+                if len(os.listdir(downloaddirectory + f"\{modname}\{version}")) > 0:
+                    print(f"deleting {file}")
+                    os.remove(downloaddirectory + f"\{file}")
+                else:
+                    shutil.move(downloaddirectory + f"\{file_name}", downloaddirectory + f"\{modname}\{version}")
+                file_moved = 1
+                break
+        time.sleep(1.5)
+        if file_moved == 1:
+            break
+
 all_versions = ['1.18.1','1.18','1.17.1','1.16.5',
                 '1.16.4,','1.16.3','1.16.2','1.16.1',
                 '1.15.2','1.15.1','1.14.4','1.14.3',
@@ -99,7 +120,7 @@ version_link_parts = ['2020709689%3A8857','2020709689%3A8830','2020709689%3A8516
                       '2020709689%3A6144','2020709689%3A6084','2020709689%3A5946','2020709689%3A5806',
                       '2020709689%3A5703','2020709689%3A4455','2020709689%3A4449','2020709689%3A361',
                       '2020709689%3A361']
-def downloader(modname):
+def downloader(modname, downloaddirectory):
     baseurl = driver.current_url
     driver.get(driver.current_url + '/files/all?filter-game-version=')
     dropdown_versions = driver.find_element(By.ID,'filter-game-version').find_elements(By.TAG_NAME, "option")
@@ -113,18 +134,12 @@ def downloader(modname):
             if version == aversion:
                 driver.get(baseurl + '/files/all?filter-game-version=' + version_link_parts[vlpcounter])
                 download_button = driver.find_element(By.CLASS_NAME,"icon-fixed-width")
+                driver.execute_script("return arguments[0].scrollIntoView(true);", download_button)
                 download_button.click()
-                time.sleep(10)
-                for file in os.listdir(f"C:\CurseforgeScraperProject\Mods\\"):
-                    if file.endswith(".jar")or file.endswith(".zip"):
-                        file_name = file
-                        os.mkdir(f"C:\CurseforgeScraperProject\Mods\{modname}\{version}")
-                        time.sleep(1)
-                        shutil.move(f"C:\CurseforgeScraperProject\Mods\{file_name}", f"C:\CurseforgeScraperProject\Mods\{modname}\{version}")
+                time.sleep(1)
+                file_detector(modname, downloaddirectory, version)
+                time.sleep(2)
             vlpcounter += 1
-
-def jar_mover():
-    pass
 
 def cfscraper_single(url, download_directory, versions):
     driver.get(url)
@@ -134,10 +149,10 @@ def cfscraper_single(url, download_directory, versions):
     png_to_icon(mod_name, download_directory)
     desktopini_creator(mod_name, download_directory)
     infohtml_creator(mod_name,  download_directory)
-    downloader(mod_name)
+    downloader(mod_name, download_directory)
 
     
-#cfscraper_single('https://www.curseforge.com/minecraft/mc-mods/journeymap',f'C:\CurseforgeScraperProject\Mods', 1)
+#cfscraper_single('https://www.curseforge.com/minecraft/mc-mods/farlands-forge',f'C:\CurseforgeScraperProject\Mods', 1)
 
 def page_links_getter(url):
     links = []
@@ -163,8 +178,8 @@ def cfscraper_multi(url, start_page, end_page, download_directory):
         png_to_icon(mod_name, download_directory)
         desktopini_creator(mod_name, download_directory)
         infohtml_creator(mod_name, download_directory)
-        downloader(mod_name)
-    if start_page <= end_page:
+        downloader(mod_name, download_directory)
+    if start_page < end_page:
         cfscraper_multi(url, start_page, end_page, download_directory)
 
-#cfscraper_multi('https://www.curseforge.com/minecraft/mc-mods?filter-sort=1',1,1,f'C:\CurseforgeScraperProject\Mods')
+cfscraper_multi('https://www.curseforge.com/minecraft/mc-mods?filter-sort=1',1,2,f'C:\CurseforgeScraperProject\Mods')
