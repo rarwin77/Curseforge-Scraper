@@ -141,7 +141,7 @@ def downloader(modname, downloaddirectory):
                 time.sleep(2)
             vlpcounter += 1
 
-def cfscraper_single(url, download_directory, versions):
+def cfscraper_single(url, download_directory):
     driver.get(url)
     mod_name = name_getter()
     folder_creator(mod_name, download_directory)
@@ -152,7 +152,7 @@ def cfscraper_single(url, download_directory, versions):
     downloader(mod_name, download_directory)
 
     
-#cfscraper_single('https://www.curseforge.com/minecraft/mc-mods/farlands-forge',f'C:\CurseforgeScraperProject\Mods', 1)
+#cfscraper_single('https://www.curseforge.com/minecraft/mc-mods/farlands-forge',f'C:\CurseforgeScraperProject\Mods')
 
 def page_links_getter(url):
     links = []
