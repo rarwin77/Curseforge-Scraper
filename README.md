@@ -27,3 +27,7 @@ download_directory is a string of the download directory you want to download th
 ```
 for example:
 cfscraper_multi('https://www.curseforge.com/minecraft/mc-mods?filter-sort=1',1,2,f'C:\CurseforgeScraperProject\Mods')
+
+![end_result1](https://raw.githubusercontent.com/rarwin77/Curseforge-Scraper/main/exampleresultcss.png)
+
+![end_result2](https://raw.githubusercontent.com/rarwin77/Curseforge-Scraper/main/individualresultcss.png)
