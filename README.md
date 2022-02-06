@@ -5,7 +5,7 @@ This is a python script that uses Selenium to scrape files and information from 
 ## Functions
 
 ```
-cfscraper_single(url, download_directory, versions)
+cfscraper_single(url, download_directory)
 
 url is a string of the url of the item you want
 download_directory is a string of the download directory you want to download the items to
